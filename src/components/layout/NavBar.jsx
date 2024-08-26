@@ -2,6 +2,13 @@ import { NavLink } from "react-router-dom";
 
 export const NavBar = () => {
     const anchoImagen = 40;
+
+    // funcion para cerrar sesion
+    const handleLogout = () => {
+      // Implementar el logout
+      window.location.href = '/login';
+    };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-success">
@@ -30,16 +37,25 @@ export const NavBar = () => {
                     isPending ? "pending" : "",
                     isActive ? "text-white" : "",
                     isTransitioning ? "transitioning" : "",
-                ].join("nav-link")
+                ].join("")
                 }
              >
                 Inicio
             </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
-                </a>
+              <NavLink
+                to="/reserva"
+                className={({ isActive, isPending, isTransitioning }) =>
+                [
+                    isPending ? "pending" : "",
+                    isActive ? "text-white" : "",
+                    isTransitioning ? "transitioning" : "",
+                ].join("")
+                }
+             >
+                Reservas
+            </NavLink>
               </li>
               <li className="nav-item dropdown">
                 <a
@@ -69,21 +85,10 @@ export const NavBar = () => {
                   </li>
                 </ul>
               </li>
-              <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">
-                  Disabled
-                </a>
-              </li>
             </ul>
             <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-dark" type="submit">
-                Search
+              <button className="btn btn-outline-light" type="button" onClick={handleLogout}>
+                Salir
               </button>
             </form>
           </div>

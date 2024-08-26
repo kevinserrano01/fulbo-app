@@ -3,6 +3,7 @@ import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Reserva } from "./components/Reserva";
 import { Layout } from "./Layout";
+import { Register } from "./components/Register";
 
 export const Router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ export const Router = createBrowserRouter([
             {
                 path: "/reserva",
                 element: <Reserva />
+            },
+            {
+                path: "/register",
+                element: <Register />
             }
         ]
     }

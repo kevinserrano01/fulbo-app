@@ -12,10 +12,11 @@ body {
 
 .navbar {
     background-color: #459640;
-    color: #b3b3b3;
+    padding: 8px;
 }
 
-.nav-item {
+.nav-item a{
     text-decoration: none;
     display: block;
+    color: #e2e2e2;
 }

@@ -30,60 +30,52 @@ export const NavBar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-              <NavLink
-                to="/"
-                className={({ isActive, isPending, isTransitioning }) =>
-                [
-                    isPending ? "pending" : "",
-                    isActive ? "text-white" : "",
-                    isTransitioning ? "transitioning" : "",
-                ].join("")
-                }
-             >
-                Inicio
-            </NavLink>
+                <div className="nav-link">
+                  <NavLink
+                    to="/"
+                    className={({ isActive, isPending, isTransitioning }) =>
+                    [
+                        isPending ? "pending" : "",
+                        isActive ? "text-white border-bottom border-white border-3" : "",
+                        isTransitioning ? "transitioning" : "",
+                    ].join(" ")
+                    }
+                  >
+                      Inicio
+                  </NavLink>
+              </div>
               </li>
               <li className="nav-item">
-              <NavLink
-                to="/reserva"
-                className={({ isActive, isPending, isTransitioning }) =>
-                [
-                    isPending ? "pending" : "",
-                    isActive ? "text-white" : "",
-                    isTransitioning ? "transitioning" : "",
-                ].join("")
-                }
-             >
-                Reservas
-            </NavLink>
+                <div className="nav-link">
+                  <NavLink
+                    to="/canchas"
+                    className={({ isActive, isPending, isTransitioning }) =>
+                      [
+                          isPending ? "pending" : "",
+                          isActive ? "text-white border-bottom border-white border-3" : "",
+                          isTransitioning ? "transitioning" : "",
+                      ].join(" ")
+                    }
+                  >
+                    Canchas
+                  </NavLink>
+                </div>
               </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Dropdown
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </li>
-                </ul>
+              <li className="nav-item">
+                <div className="nav-link">
+                  <NavLink
+                    to="/reservas"
+                    className={({ isActive, isPending, isTransitioning }) =>
+                      [
+                          isPending ? "pending" : "",
+                          isActive ? "text-white border-bottom border-white border-3" : "",
+                          isTransitioning ? "transitioning" : "",
+                      ].join(" ")
+                    }
+                  >
+                    Mis reservas
+                  </NavLink>
+                </div>
               </li>
             </ul>
             <form className="d-flex" role="search">

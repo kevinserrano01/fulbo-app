@@ -4,6 +4,7 @@ import { Login } from "./components/Login";
 import { Reserva } from "./components/Reserva";
 import { Layout } from "./Layout";
 import { Register } from "./components/Register";
+import { Canchas } from "./components/Canchas";
 
 export const Router = createBrowserRouter([
     {
@@ -18,8 +19,12 @@ export const Router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "/reserva",
+                path: "/reservas",
                 element: <Reserva />
+            },
+            {
+                path: "/canchas",
+                element: <Canchas />
             },
             {
                 path: "/register",

@@ -25,6 +25,10 @@ export const CanchaDetails = () => {
         navigate(-1);
     };
 
+    const handleIniciarReserva = () => {
+        navigate(`/reservas/addReserva`);
+    };
+
     const [cancha] = data.filter((cancha) => cancha.id === parseInt(idCancha));
 
   return (
@@ -61,7 +65,7 @@ export const CanchaDetails = () => {
                         <div className="row">
                             <div className="col-12 col-md-4"></div>
                             <div className="col-12 col-md-4">
-                                <button className="btn btn-success w-100" type="button">Iniciar reserva</button>
+                                <button className="btn btn-success w-100" type="button" onClick={handleIniciarReserva}>Iniciar reserva</button>
                             </div>
                             <div className="col-12 col-md-4"></div>
                         </div>

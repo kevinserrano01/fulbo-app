@@ -8,6 +8,7 @@ import { Canchas } from "./components/Canchas";
 import { CanchaDetails } from "./components/CanchaDetails";
 import { NotFound } from "./components/NotFound";
 import { ReservaDetails } from "./components/ReservaDetails";
+import { AddReserva } from "./components/AddReserva";
 
 export const Router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ export const Router = createBrowserRouter([
                     {
                         path: ":idReserva",
                         element: <ReservaDetails />
+                    },
+                    {
+                        path: "addReserva",
+                        element: <AddReserva />
                     }
                 ],
             },

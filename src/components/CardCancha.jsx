@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 export const CardCancha = ({ cancha }) => {
   const navigate = useNavigate();
 
+  const handleDetails = () => {
+    navigate(`/canchas/${cancha.id}`);
+  };
+
   const anchoCard = {
     width: "auto",
   };
@@ -25,7 +29,7 @@ export const CardCancha = ({ cancha }) => {
         <li className="list-group-item">Tipo: {cancha.tipo} </li>
       </ul>
       <div className="card-body">
-        <button className="btn btn-primary fw-bold" onClick={() => navigate(`/canchas/${cancha.id}`)}>
+        <button className="btn btn-success fw-bold w-100" onClick={handleDetails}>
           Ver
         </button>
       </div>

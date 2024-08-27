@@ -18,7 +18,7 @@ export const CanchaDetails = () => {
         <div className="row">
             <div className="col-md-4 mb-4">
                 <button className="btn btn-light" onClick={handleBackClick}>
-                    <SlArrowLeft /> Back
+                    <SlArrowLeft /> Volver
                 </button>
             </div>
         </div>

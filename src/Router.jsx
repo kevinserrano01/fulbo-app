@@ -7,6 +7,7 @@ import { Register } from "./components/Register";
 import { Canchas } from "./components/Canchas";
 import { CanchaDetails } from "./components/CanchaDetails";
 import { NotFound } from "./components/NotFound";
+import { ReservaDetails } from "./components/ReservaDetails";
 
 export const Router = createBrowserRouter([
     {
@@ -22,7 +23,16 @@ export const Router = createBrowserRouter([
             },
             {
                 path: "/reservas",
-                element: <Reserva />
+                children: [
+                    {
+                        index: true,
+                        element: <Reserva />
+                    },
+                    {
+                        path: ":idReserva",
+                        element: <ReservaDetails />
+                    }
+                ],
             },
             {
                 path: "/canchas",

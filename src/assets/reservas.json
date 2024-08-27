@@ -1,0 +1,33 @@
+[
+    {
+      "id": 1,
+      "autor": "Juan Perez",
+      "nombre_cancha": "Cancha El Fortín",
+      "ubicacion_cancha": "Calle San Martín 123, Salta",
+      "tipo_cancha": "Fútbol 5",
+      "dia_reservado": "2024-09-01",
+      "horario_reservado": "16:00 - 17:00",
+      "precio": 2500
+    },
+    {
+      "id": 2,
+      "autor": "Lucía Fernández",
+      "nombre_cancha": "Cancha Los Amigos",
+      "ubicacion_cancha": "Av. Belgrano 987, Salta",
+      "tipo_cancha": "Fútbol 8",
+      "dia_reservado": "2024-09-02",
+      "horario_reservado": "14:00 - 15:00",
+      "precio": 3000
+    },
+    {
+      "id": 3,
+      "autor": "Carlos González",
+      "nombre_cancha": "Cancha La Liga",
+      "ubicacion_cancha": "Calle Alvear 456, Salta",
+      "tipo_cancha": "Fútbol 5",
+      "dia_reservado": "2024-09-03",
+      "horario_reservado": "08:00 - 09:00",
+      "precio": 2800
+    }
+  ]
+  

@@ -17,13 +17,6 @@ export const CardCancha = ({ cancha }) => {
       <ul className="list-group list-group-flush">
         <li className="list-group-item">Ubicacion: {cancha.ubicacion} </li>
         <li className="list-group-item">Tipo: {cancha.tipo} </li>
-        <li className="list-group-item">
-          Dias disponibles: {cancha.dias_disponibles}{" "}
-        </li>
-        <li className="list-group-item">
-          Horarios: {cancha.horarios_disponibles}{" "}
-        </li>
-        <li className="list-group-item">Precio: {cancha.precio} </li>
       </ul>
       <div className="card-body">
         <a href="#" className="card-link">

@@ -1,8 +1,14 @@
 /* eslint-disable react/prop-types */
+import { useNavigate } from "react-router-dom";
+
 export const CardCancha = ({ cancha }) => {
+  const navigate = useNavigate();
+
   const anchoCard = {
     width: "auto",
   };
+
+
   return (
     <div className="card" style={anchoCard}>
       <img
@@ -19,9 +25,9 @@ export const CardCancha = ({ cancha }) => {
         <li className="list-group-item">Tipo: {cancha.tipo} </li>
       </ul>
       <div className="card-body">
-        <a href="#" className="card-link">
+        <button className="btn btn-primary fw-bold" onClick={() => navigate(`/canchas/${cancha.id}`)}>
           Ver
-        </a>
+        </button>
       </div>
     </div>
   );

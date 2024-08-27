@@ -67,6 +67,18 @@
           "puntuacion": 5
         }
       ]
+    },
+    {
+      "id": 4,
+      "nombre": "Cancha San Lorenzo",
+      "ubicacion": "Calle Lorenz, Salta",
+      "imagen": "https://via.placeholder.com/300",
+      "descripcion": "Cancha de fútbol 8 para jugar entre varios amigos.",
+      "tipo": "Fútbol 8",
+      "dias_disponibles": ["Lunes", "Martes", "Miércoles", "Sábado"],
+      "horarios_disponibles": ["08:00 - 09:30", "13:00 - 14:30", "15:00 - 16:30", "19:00 - 20:30"],
+      "precio": 3200,
+      "opiniones": []
     }
 ]
   

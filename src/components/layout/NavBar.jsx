@@ -1,11 +1,13 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const NavBar = () => {
     const anchoImagen = 40;
+    const { logout } = useAuth("actions");
 
     // funcion para cerrar sesion
     const handleLogout = () => {
-      // Implementar el logout
+      logout();
       window.location.href = '/login';
     };
 

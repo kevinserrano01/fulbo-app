@@ -14,10 +14,10 @@ export const ReservaCard = ({reserva}) => {
         <h3 className="card-subtitle ">Numero de reserva: {reserva.id}</h3>
       </div>
       <div className="card-body">
-        <p className="card-text"><strong>Cancha:</strong> {reserva.nombre_cancha}</p>
-        <p className="card-text"><strong>Ubicación:</strong> {reserva.ubicacion_cancha}</p>
-        <p className="card-text"><strong>Día:</strong> {reserva.dia_reservado}</p>
-        <p className="card-text"><strong>Horario:</strong> {reserva.horario_reservado}</p>
+        <p className="card-text"><strong>Cancha:</strong> {reserva.cancha}</p>
+        <p className="card-text"><strong>Telefono:</strong> {reserva.telefono}</p>
+        <p className="card-text"><strong>Día:</strong> {reserva.fecha}</p>
+        <p className="card-text"><strong>Horario:</strong> {reserva.hora}</p>
         <button className="btn btn-primary fw-bold" onClick={handleDetails}>Ver detalles</button>
       </div>
     </div>

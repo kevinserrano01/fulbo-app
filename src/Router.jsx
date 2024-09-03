@@ -9,6 +9,8 @@ import { CanchaDetails } from "./components/CanchaDetails";
 import { NotFound } from "./components/NotFound";
 import { ReservaDetails } from "./components/ReservaDetails";
 import { AddReserva } from "./components/AddReserva";
+import { UserProfile } from "./components/UserProfile";
+import { UserEdit } from "./components/UserEdit";
 
 export const Router = createBrowserRouter([
     {
@@ -60,6 +62,19 @@ export const Router = createBrowserRouter([
                 path: "*",
                 element: <NotFound />
             },
+            {
+                path: "/profile",
+                children: [
+                    {
+                        index: true,
+                        element: <UserProfile />
+                    },
+                    {
+                        path: "edit",
+                        element: <UserEdit />
+                    }
+                ]
+            }
         ]
     }
 ]);

@@ -79,6 +79,22 @@ export const NavBar = () => {
                   </NavLink>
                 </div>
               </li>
+              <li className="nav-item">
+                <div className="nav-link">
+                  <NavLink
+                    to="/profile"
+                    className={({ isActive, isPending, isTransitioning }) =>
+                      [
+                          isPending ? "pending" : "",
+                          isActive ? "text-white border-bottom border-white border-3" : "",
+                          isTransitioning ? "transitioning" : "",
+                      ].join(" ")
+                    }
+                  >
+                    Perfil
+                  </NavLink>
+                </div>
+              </li>
             </ul>
             <form className="d-flex" role="search">
               <button className="btn btn-outline-light" type="button" onClick={handleLogout}>

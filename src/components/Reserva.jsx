@@ -19,7 +19,7 @@ export const Reserva = () => {
 
   if (isLoading) return <h2>Cargando...</h2>;
   if (errors) return <h2>Error al cargar las reservas.</h2>;
-  if (errors) return <h2>Error al cargar las reservas.</h2>;
+  if (!data) return <h2>Error al cargar las reservas.</h2>;
 
   return (
     <div className="container">
@@ -29,7 +29,7 @@ export const Reserva = () => {
 
     <div className="row">
       <div className="col-12">
-        {!data ? (
+        {data.length === 0 ? (
           <div className='alert alert-warning text-center' role="alert">No hay reservas</div>
         ) : (
           data.map((reserva, index) => (

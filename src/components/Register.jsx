@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetchHook";
 import { useState } from "react";
@@ -56,9 +57,9 @@ export const Register = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-4"></div>
+        <div className="col-md-3"></div>
 
-        <div className="col-4">
+        <div className="col-12 col-md-6">
           <h2 className="text-center mb-5">Register</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -112,6 +113,8 @@ export const Register = () => {
                 className="form-control"
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -131,7 +134,7 @@ export const Register = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="imagen" className="form-label">
-                foto de perfil
+                Foto de perfil
               </label>
               <div className="control has-icons-left">
                 <input
@@ -166,7 +169,6 @@ export const Register = () => {
             </div>
             <div className="mb-3 text-center">
               <div className="control">
-                {isLoading && <p>Cargando...</p>}
                 {isError && <p>Error al cargar los datos.</p>}
                 {data && <p>Usuario registrado con exito</p>}
               </div>
@@ -174,7 +176,7 @@ export const Register = () => {
           </form>
         </div>
 
-        <div className="col-4"></div>
+        <div className="col-md-3"></div>
       </div>
     </div>
   );

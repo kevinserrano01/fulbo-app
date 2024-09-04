@@ -57,7 +57,7 @@ export const Login = () => {
             </div>
             <div className="mb-3">
               <p >
-                Si no tienes cuenta en Fulbo, crea una <span> <a href="/register">aqui</a></span>
+                Si no tienes cuenta, crea una <span> <a href="/register">aqui</a></span>
               </p>
             </div>
             <div className="mb-3 text-center">

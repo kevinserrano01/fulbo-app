@@ -17,9 +17,9 @@ export const Reserva = () => {
       doFetch();
   }, []);
 
-  if (isLoading) return <h2>Cargando...</h2>;
-  if (errors) return <h2>Error al cargar las reservas.</h2>;
-  if (!data) return <h2>Error al cargar las reservas.</h2>;
+  if (isLoading) return <div className='container text-center'>Cargando...</div>;
+  if (errors) return <div className='container text-center'>Error al cargar las reservas.</div>;
+  if (!data) return <div className='container text-center'>La Sesion ha expirado, vuelva a iniciar sesion.</div>;
 
   return (
     <div className="container">

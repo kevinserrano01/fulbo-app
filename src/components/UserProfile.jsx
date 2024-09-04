@@ -26,8 +26,9 @@ export const UserProfile = () => {
         width: "auto",
       };
 
-    if (isLoading) return <h2>Cargando...</h2>;
-    if (errors) return <h2>Error al cargar datos del perfil.</h2>;
+    if (isLoading) return <div className='container text-center'>Cargando...</div>;
+    if (errors) return <div className='container text-center'>Error al cargar datos del perfil.</div>;
+    if (!data) return <div className='container text-center'>La Sesion ha expirado, vuelva a iniciar sesion.</div>;
 
   return (
     <div className='container'>
@@ -49,10 +50,7 @@ export const UserProfile = () => {
                             Editar perfil
                         </button>
                     </div>
-                </div>
-
-                <img src={data.imagen} alt="foto de perfil" width={anchoImagePerfil} />
-                
+                </div>                
             </div>
 
             <div className="col-4"></div>

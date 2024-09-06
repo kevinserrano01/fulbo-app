@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { SlArrowLeft } from "react-icons/sl";
 import { useAuth } from "../contexts/AuthContext";
 import { CgMathPlus } from "react-icons/cg";
-// import { OpinionesCard } from "./OpinionesCard";
+import { OpinionesCard } from "./OpinionesCard";
 import useFetch from "../hooks/useFetchHook";
 
 export const CanchaDetails = () => {
     const navigate = useNavigate();
     const { idCancha } = useParams();
     const { token } = useAuth('state');
+    const [opiniones, setOpiniones] = useState(null)
     const [showModal, setShowModal] = useState(false);
     const [comentario, setComentario] = useState('');
     const [ {data, isLoading, errors}, doFetch ] = useFetch(`http://127.0.0.1:8000/api/canchas/${idCancha}`, {
@@ -24,14 +25,60 @@ export const CanchaDetails = () => {
         doFetch();
     }, []);
 
+    useEffect(() => {
+        if (data) {
+            const fetchOpiniones = async () => {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/opiniones/?cancha=${idCancha}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Token ${token}`,
+                        },
+                    });
+                    if (!response.ok) {
+                        console.log('Error al obtener los datos de la opinion');
+                    }
+                    const opinionData = await response.json();
+                    setOpiniones(opinionData);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            fetchOpiniones();
+        }
+    }, [data, token]);
+
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
     const handleComentarioChange = (e) => setComentario(e.target.value);
 
-    const handleComentar = () => {
+    //! obtener el id del usuario logueado
+
+    const handleComentar = async () => {
         // Aquí puedes agregar la lógica para manejar el comentario
+        const response = await fetch('http://127.0.0.1:8000/api/opiniones/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Token ${token}`,
+            },
+            body: JSON.stringify({
+              cancha: idCancha,
+              descripcion: comentario,
+              propietario: 10, // Obtener el id del usuario logueado
+            }),
+        });
+
+        if (!response.ok) {
+            alert('Error al crear opinion');
+            return;
+        }
+        
+
         console.log('Comentario:', comentario);
         handleCloseModal();
+        navigate(`/canchas/${idCancha}`);
     };
 
     const handleBackClick = () => {
@@ -53,6 +100,10 @@ export const CanchaDetails = () => {
 
     if (!data) {
         return <div className="container text-center">Error al cargar los datos de la cancha</div>;
+    }
+
+    if (!opiniones) {
+        return <div className="container text-center">Cargando opiniones...</div>;
     }
 
   return (
@@ -110,10 +161,11 @@ export const CanchaDetails = () => {
         <div className="row mt-5">
             <div className="col-12">
             <p className="card-text"><strong>Opiniones:</strong></p>
-              {/* {data.opiniones.length === 0 && <p className="text-body-secondary">No hay opiniones</p>}
-              {data.opiniones.map((opinion, index) => (
+              {!opiniones && <p className="text-body-secondary">Cargando opiniones...</p>}
+              {opiniones.length === 0 && <p className="text-body-secondary">No hay opiniones</p>}
+              {opiniones.map((opinion, index) => (
                 <OpinionesCard key={index} opinion={opinion} />
-              ))} */}
+              ))}
               <button className="btn btn-dark mb-5" onClick={handleShowModal}>
                 <CgMathPlus /> Agregar comentario
               </button>

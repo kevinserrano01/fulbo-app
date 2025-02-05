@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { CgMathPlus } from "react-icons/cg";
 import { OpinionesCard } from "./OpinionesCard";
 import useFetch from "../hooks/useFetchHook";
+import { toast } from "react-toastify";
 
 export const CanchaDetails = () => {
     const navigate = useNavigate();
@@ -49,61 +50,47 @@ export const CanchaDetails = () => {
         }
     }, [data, token]);
 
-    // useEffect(() => {
-    //     if (data) {
-    //         const fetchUserId = async () => {
-    //             try {
-    //                 const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
-    //                     method: 'GET',
-    //                     headers: {
-    //                         'Authorization': `Token ${token}`,
-    //                     },
-    //                 });
-    //                 if (!response.ok) {
-    //                     console.log('Error al obtener los datos de la opinion');
-    //                 }
-    //                 const opinionData = await response.json();
-    //                 setOpiniones(opinionData);
-    //             } catch (error) {
-    //                 console.error(error);
-    //             }
-    //         };
-
-    //         fetchUserId();
-    //     }
-    // }, [data, token]);
-
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
     const handleComentarioChange = (e) => setComentario(e.target.value);
 
-    // obtener el id del usuario logueado
-
 
     const handleComentar = async () => {
-        // Aquí puedes agregar la lógica para manejar el comentario
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Token ${token}`,
-            },
-            body: JSON.stringify({
-              cancha: idCancha,
-              descripcion: comentario,
-              propietario: 10, // Obtener el id del usuario logueado
-            }),
-        });
-
-        if (!response.ok) {
-            alert('Error al crear opinion');
+        if (!comentario.trim()) {
+            toast.error('No puedes enviar un comentario vacío');
             return;
         }
-        
-
-        console.log('Comentario:', comentario);
-        handleCloseModal();
-        navigate(`/canchas/${idCancha}`);
+    
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                },
+                body: JSON.stringify({
+                    soccer_field_id: idCancha,
+                    description: comentario,
+                    stars: 4,
+                }),
+            });
+    
+            if (response.ok) {
+                toast.success('Comentario agregado correctamente!');
+                handleCloseModal();
+                // esperar 3 segundos y recargar la página
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                const errorData = await response.json();
+                console.error("Error create opinion data:", response.statusText);
+                toast.error(errorData[0] || 'Error al agregar comentario :c'); // Mostrar el mensaje de error devuelto por la API
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Error al agregar comentario');
+        }
     };
 
     const handleBackClick = () => {
@@ -220,6 +207,7 @@ export const CanchaDetails = () => {
                             placeholder="Escribe tu comentario aquí..."
                             value={comentario}
                             onChange={handleComentarioChange}
+                            required
                             />
                         </div>
                         <div className="modal-footer">

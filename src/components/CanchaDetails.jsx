@@ -14,7 +14,7 @@ export const CanchaDetails = () => {
     const [opiniones, setOpiniones] = useState(null)
     const [showModal, setShowModal] = useState(false);
     const [comentario, setComentario] = useState('');
-    const [ {data, isLoading, errors}, doFetch ] = useFetch(`http://127.0.0.1:8000/api/canchas/${idCancha}`, {
+    const [ {data, isLoading, errors}, doFetch ] = useFetch(`${import.meta.env.VITE_BASE_URL}api/canchas/${idCancha}`, {
         method: 'GET',
         headers: {
             'Authorization': `Token ${token}`,
@@ -29,7 +29,7 @@ export const CanchaDetails = () => {
         if (data) {
             const fetchOpiniones = async () => {
                 try {
-                    const response = await fetch(`http://127.0.0.1:8000/api/opiniones/?cancha=${idCancha}`, {
+                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/?cancha=${idCancha}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Token ${token}`,
@@ -49,11 +49,36 @@ export const CanchaDetails = () => {
         }
     }, [data, token]);
 
+    useEffect(() => {
+        if (data) {
+            const fetchUserId = async () => {
+                try {
+                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Token ${token}`,
+                        },
+                    });
+                    if (!response.ok) {
+                        console.log('Error al obtener los datos de la opinion');
+                    }
+                    const opinionData = await response.json();
+                    setOpiniones(opinionData);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            fetchUserId();
+        }
+    }, [data, token]);
+
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
     const handleComentarioChange = (e) => setComentario(e.target.value);
 
-    //! obtener el id del usuario logueado
+    // obtener el id del usuario logueado
+
 
     const handleComentar = async () => {
         // Aquí puedes agregar la lógica para manejar el comentario
@@ -164,7 +189,7 @@ export const CanchaDetails = () => {
               {!opiniones && <p className="text-body-secondary">Cargando opiniones...</p>}
               {opiniones.length === 0 && <p className="text-body-secondary">No hay opiniones</p>}
               {opiniones.map((opinion, index) => (
-                <OpinionesCard key={index} opinion={opinion} />
+                <OpinionesCard key={index} opinion={opinion} propietario={opinion.propietario}/>
               ))}
               <button className="btn btn-dark mb-5" onClick={handleShowModal}>
                 <CgMathPlus /> Agregar comentario

@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetchHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ export const Register = () => {
     email: "",
     first_name: "",
     last_name: "",
-    celular: "",
+    telephone: "",
     password: "",
-    imagen: null,
+    image: null,
   });
 
   const handleChange = (e) => {
@@ -25,33 +26,49 @@ export const Register = () => {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      imagen: e.target.files[0], // Solo se permite seleccionar un archivo
+      image: e.target.files[0], // Solo se permite seleccionar un archivo
     });
   };
 
-  const [{ data, isError, isLoading }, doFetch] = useFetch(
-    "http://127.0.0.1:8000/api/register/",
-    {
-      method: "POST",
-    }
-  );
-
-  // funcion para registart usuario y redirigir a la pagina de login
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Crea un objeto FormData para enviar datos al backend
     const form = new FormData();
     form.append("username", formData.username);
     form.append("email", formData.email);
     form.append("first_name", formData.first_name);
     form.append("last_name", formData.last_name);
-    form.append("celular", formData.celular);
+    form.append("telephone", formData.telephone);
     form.append("password", formData.password);
-    form.append("imagen", formData.imagen); // Incluye la imagen en el form
+    if (formData.image instanceof File) {
+        form.append("image", formData.image); // Incluye la imagen solo si es un archivo
+    }
 
-    doFetch({ body: form });
-    alert("Usuario registrado con exito");
-    navigate("/login");
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}register/`, {
+            method: 'POST',
+            body: form,
+        });
+
+        if (response.ok) {
+            const updatedData = await response.json();
+            setFormData({
+                username: updatedData.username || "",
+                email: updatedData.email || "",
+                first_name: updatedData.first_name || "",
+                last_name: updatedData.last_name || "",
+                telephone: updatedData.telephone || "",
+                password: updatedData.password || "",
+                image: updatedData.image || null,
+            });
+            toast.success("Cuenta creada con éxito!");
+            navigate("/login");
+        } else {
+            toast.error("Error al crear cuenta :(.");
+            console.error("Error create user data:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error al crear cuenta:", error);
+    }
   };
 
   return (
@@ -102,6 +119,7 @@ export const Register = () => {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                autoComplete="username"
               />
             </div>
             <div className="mb-3">
@@ -116,20 +134,22 @@ export const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                autoComplete="email"
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="celular" className="form-label">
+              <label htmlFor="telephone" className="form-label">
                 Celular
               </label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
-                id="celular"
-                name="celular"
-                value={formData.celular}
+                id="telephone"
+                name="telephone"
+                value={formData.telephone}
                 onChange={handleChange}
                 required
+                autoComplete="telephone"
               />
             </div>
             <div className="mb-3">
@@ -158,6 +178,7 @@ export const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                autoComplete="current-password"
               />
             </div>
             <div className="mb-3 text-center">
@@ -165,12 +186,6 @@ export const Register = () => {
                 <button type="submit" className="btn btn-primary text-center">
                   Registrarme
                 </button>
-              </div>
-            </div>
-            <div className="mb-3 text-center">
-              <div className="control">
-                {isError && <p>Error al cargar los datos.</p>}
-                {data && <p>Usuario registrado con exito</p>}
               </div>
             </div>
           </form>

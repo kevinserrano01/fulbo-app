@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import useFetch from '../hooks/useFetchHook';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 export const UserProfile = () => {
     const { token } = useAuth('state');
@@ -20,6 +21,42 @@ export const UserProfile = () => {
 
     const handleEditarPerfil = () => {
         navigate(`/profile/edit`);
+    };
+
+    const handleEliminarPerfil = async () => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#5CB338',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar cuenta!'
+        });
+
+        if (result.isConfirmed) {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                Swal.fire(
+                    'Eliminado!',
+                    'Tu cuenta ha sido eliminada.',
+                    'success'
+                );
+                navigate(`/login`);
+            } else {
+                Swal.fire(
+                    'Error!',
+                    'Algo salió mal.',
+                    'error'
+                );
+            }
+        }
     };
 
     const anchoImagePerfil = {
@@ -46,8 +83,13 @@ export const UserProfile = () => {
                         <p className='card-text'><strong>Usuario:</strong> {data.username}</p>
                         <p><strong>Email:</strong> {data.email}</p>
                         <p><strong>Celular:</strong> {data.telephone}</p>
+                        {data.is_owner === true && <p><strong>Rol: </strong>Propietario</p>}
+                        {data.is_client === true && <p><strong>Rol: </strong>Cliente</p>}
                         <button className="btn btn-success fw-bold w-100" onClick={handleEditarPerfil}>
                             Editar perfil
+                        </button>
+                        <button className="btn btn-danger fw-bold w-100 mt-2" onClick={handleEliminarPerfil}>
+                            Eliminar cuenta
                         </button>
                     </div>
                 </div>                

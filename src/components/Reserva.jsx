@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 export const Reserva = () => {
   const { token } = useAuth('state');
-  const [ {data, isLoading, errors}, doFetch ] = useFetch(`http://127.0.0.1:8000/api/reservas`, {
+  const [ {data, isLoading, errors}, doFetch ] = useFetch(`${import.meta.env.VITE_BASE_URL}api/reservas`, {
       method: 'GET',
       headers: {
           'Authorization': `Token ${token}`,

@@ -46,6 +46,8 @@ export const UserProfile = () => {
                         <p className='card-text'><strong>Usuario:</strong> {data.username}</p>
                         <p><strong>Email:</strong> {data.email}</p>
                         <p><strong>Celular:</strong> {data.telephone}</p>
+                        {data.is_owner === true && <p><strong>Rol: </strong>Propietario</p>}
+                        {data.is_client === true && <p><strong>Rol: </strong>Cliente</p>}
                         <button className="btn btn-success fw-bold w-100" onClick={handleEditarPerfil}>
                             Editar perfil
                         </button>

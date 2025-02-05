@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export const UserProfile = () => {
     const { token } = useAuth('state');
     const navigate = useNavigate();
-    const [ {data, isLoading, errors}, doFetch ] = useFetch(`http://127.0.0.1:8000/api/profile`, {
+    const [ {data, isLoading, errors}, doFetch ] = useFetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
         method: 'GET',
         headers: {
             'Authorization': `Token ${token}`,
@@ -40,12 +40,12 @@ export const UserProfile = () => {
                 <h2 className='text-center mb-4'>Perfil</h2>
 
                 <div className="card" style={anchoImagePerfil}>
-                    <img src={data.imagen} className="card-img-top" alt="foto de perfil" />
+                    <img src={data.image} className="card-img-top" alt="foto de perfil" />
                     <div className="card-body">
                         <h5 className='card-title'><strong>{data.first_name} {data.last_name}</strong> </h5>
                         <p className='card-text'><strong>Usuario:</strong> {data.username}</p>
                         <p><strong>Email:</strong> {data.email}</p>
-                        <p><strong>Celular:</strong> {data.celular}</p>
+                        <p><strong>Celular:</strong> {data.telephone}</p>
                         <button className="btn btn-success fw-bold w-100" onClick={handleEditarPerfil}>
                             Editar perfil
                         </button>

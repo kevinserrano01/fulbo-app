@@ -29,7 +29,7 @@ export const CanchaDetails = () => {
         if (data) {
             const fetchOpiniones = async () => {
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/?cancha=${idCancha}`, {
+                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/?soccer_field=${idCancha}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Token ${token}`,
@@ -49,29 +49,29 @@ export const CanchaDetails = () => {
         }
     }, [data, token]);
 
-    useEffect(() => {
-        if (data) {
-            const fetchUserId = async () => {
-                try {
-                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Token ${token}`,
-                        },
-                    });
-                    if (!response.ok) {
-                        console.log('Error al obtener los datos de la opinion');
-                    }
-                    const opinionData = await response.json();
-                    setOpiniones(opinionData);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
+    // useEffect(() => {
+    //     if (data) {
+    //         const fetchUserId = async () => {
+    //             try {
+    //                 const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
+    //                     method: 'GET',
+    //                     headers: {
+    //                         'Authorization': `Token ${token}`,
+    //                     },
+    //                 });
+    //                 if (!response.ok) {
+    //                     console.log('Error al obtener los datos de la opinion');
+    //                 }
+    //                 const opinionData = await response.json();
+    //                 setOpiniones(opinionData);
+    //             } catch (error) {
+    //                 console.error(error);
+    //             }
+    //         };
 
-            fetchUserId();
-        }
-    }, [data, token]);
+    //         fetchUserId();
+    //     }
+    // }, [data, token]);
 
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
@@ -82,7 +82,7 @@ export const CanchaDetails = () => {
 
     const handleComentar = async () => {
         // Aquí puedes agregar la lógica para manejar el comentario
-        const response = await fetch('http://127.0.0.1:8000/api/opiniones/', {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -115,21 +115,10 @@ export const CanchaDetails = () => {
     };
 
 
-    if (isLoading) {
-        return <div className="container text-center">Cargando...</div>;
-    }
-
-    if (errors) {
-        return <div className="container text-center" >Error: {errors.message}</div>;
-    }
-
-    if (!data) {
-        return <div className="container text-center">Error al cargar los datos de la cancha</div>;
-    }
-
-    if (!opiniones) {
-        return <div className="container text-center">Cargando opiniones...</div>;
-    }
+    if (isLoading) {return <div className="container text-center">Cargando...</div>;}
+    if (errors) {return <div className="container text-center" >Error: {errors.message}</div>;}
+    if (!data) {return <div className="container text-center">Error al cargar los datos de la cancha</div>;}
+    if (!opiniones) {return <div className="container text-center">Cargando opiniones...</div>;}
 
   return (
     <div className="container">
@@ -147,26 +136,42 @@ export const CanchaDetails = () => {
             <div className="col-12 col-md-8">
                 <div className="card shadow-sm">
                     <div className="card-body">
-                        <h2 className="card-title">{data.nombre}</h2>
-                        <img src= {data.imagen} className="card-img-top mb-3" alt="imagen de cancha"/>
-                        <p className="card-text"><strong>Ubicación:</strong> {data.direccion}</p>
-                        <p className="card-text"><strong>Email:</strong> {data.descripcion}</p>
-                        <p className="card-text"><strong>Descripción:</strong> {data.email}</p>
-                        <p className="card-text"><strong>Tipo:</strong> {data.tipo}</p>
-                        <p className="card-text"><strong>Días disponibles:</strong></p>
-                        <ul className="list-group list-group-flush">
-                            {/* {data.dias_disponibles.map((dia, index) => (
-                                <li key={index} className="list-group-item">{dia}</li>
-                            ))} */}
+                        <h2 className="card-title">{data.name}</h2>
+                        <img src= {data.image} className="card-img-top mb-3" alt="imagen de cancha"/>
+                        <p className="card-text"><strong>Ubicación:</strong> {data.address}</p>
+                        <p className="card-text"><strong>Descripción:</strong> {data.description}</p>
+                        <p className="card-text"><strong>Tipo:</strong></p>
+                        <ul className="list-group">
+                            <li className="">
+                                {data.tags && data.tags.split(",").map((tag, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </li>
+                        </ul>
+                        <p className="card-text mt-3"><strong>Días disponibles:</strong></p>
+                        <ul className="list-group">
+                            <li className="">
+                                {data.days_available && data.days_available.split(",").map((day, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {day}
+                                    </span>
+                                ))}
+                            </li>
                         </ul>
                         <p className="card-text mt-3"><strong>Horarios disponibles:</strong></p>
-                        <ul className="list-group list-group-flush">
-                            {/* {data.horarios_disponibles.map((horario, index) => (
-                                <li key={index} className="list-group-item">{horario}</li>
-                            ))} */}
+                        <ul className="list-group">
+                            <li className="">
+                                {data.hours_available && data.hours_available.split(",").map((hour, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {hour}
+                                    </span>
+                                ))}
+                            </li>
                         </ul>
-                        <p className="card-text"><strong>Propietario:</strong> {data.propietario}</p>
-                        <p className="card-text mt-3"><strong>Precio:</strong> ${data.precio}</p>
+                        <p className="card-text mt-3"><strong>Propietario:</strong> {data.owner.first_name} {data.owner.last_name}</p>
+                        <p className="card-text mt-3"><strong>Precio:</strong> ${data.price}</p>
                         <div className="row">
                             <div className="col-12 col-md-4"></div>
                             <div className="col-12 col-md-4">
@@ -189,7 +194,7 @@ export const CanchaDetails = () => {
               {!opiniones && <p className="text-body-secondary">Cargando opiniones...</p>}
               {opiniones.length === 0 && <p className="text-body-secondary">No hay opiniones</p>}
               {opiniones.map((opinion, index) => (
-                <OpinionesCard key={index} opinion={opinion} propietario={opinion.propietario}/>
+                <OpinionesCard key={index} opinion={opinion} propietario={opinion.user}/>
               ))}
               <button className="btn btn-dark mb-5" onClick={handleShowModal}>
                 <CgMathPlus /> Agregar comentario

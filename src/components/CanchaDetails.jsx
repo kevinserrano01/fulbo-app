@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -22,8 +23,14 @@ export const CanchaDetails = () => {
         },
     });
 
+    const [{ data: profileData, isLoading: isLoadingProfile, errors: errorsProfile }, doFetchProfile] = useFetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` },
+    });
+
     useEffect(() => {
         doFetch();
+        doFetchProfile();
     }, []);
 
     useEffect(() => {
@@ -162,7 +169,11 @@ export const CanchaDetails = () => {
                         <div className="row">
                             <div className="col-12 col-md-4"></div>
                             <div className="col-12 col-md-4">
-                                <button className="btn btn-success w-100" type="button" onClick={handleIniciarReserva}>Iniciar reserva</button>
+                            {profileData.is_client && (
+                                <button className="btn btn-success w-100" type="button" onClick={handleIniciarReserva}>
+                                    Iniciar reserva
+                                </button>
+                            )}
                             </div>
                             <div className="col-12 col-md-4"></div>
                         </div>
@@ -183,9 +194,11 @@ export const CanchaDetails = () => {
               {opiniones.map((opinion, index) => (
                 <OpinionesCard key={index} opinion={opinion} propietario={opinion.user}/>
               ))}
-              <button className="btn btn-dark mb-5" onClick={handleShowModal}>
-                <CgMathPlus /> Agregar comentario
-              </button>
+              {profileData.is_client && (
+                    <button className="btn btn-dark mb-5" onClick={handleShowModal}>
+                        <CgMathPlus /> Agregar comentario
+                    </button>
+                )}
             </div>
         </div>
 

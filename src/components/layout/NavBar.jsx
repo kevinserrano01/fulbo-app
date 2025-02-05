@@ -16,7 +16,7 @@ export const NavBar = () => {
       <nav className="navbar navbar-expand-lg bg-success">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
-            <img src="/soccer.ico" alt="logo Fulbo" width={anchoImagen}/>
+            <img src="/assets/icon.png" alt="logo Fulbo" width={anchoImagen}/>
           </a>
           <button
             className="navbar-toggler"

@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { CgMathPlus } from "react-icons/cg";
 import { OpinionesCard } from "./OpinionesCard";
 import useFetch from "../hooks/useFetchHook";
+import { toast } from "react-toastify";
 
 export const CanchaDetails = () => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ export const CanchaDetails = () => {
         if (data) {
             const fetchOpiniones = async () => {
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/?cancha=${idCancha}`, {
+                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/?soccer_field=${idCancha}`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Token ${token}`,
@@ -49,61 +50,47 @@ export const CanchaDetails = () => {
         }
     }, [data, token]);
 
-    useEffect(() => {
-        if (data) {
-            const fetchUserId = async () => {
-                try {
-                    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/profile/`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Token ${token}`,
-                        },
-                    });
-                    if (!response.ok) {
-                        console.log('Error al obtener los datos de la opinion');
-                    }
-                    const opinionData = await response.json();
-                    setOpiniones(opinionData);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-
-            fetchUserId();
-        }
-    }, [data, token]);
-
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
     const handleComentarioChange = (e) => setComentario(e.target.value);
 
-    // obtener el id del usuario logueado
-
 
     const handleComentar = async () => {
-        // Aquí puedes agregar la lógica para manejar el comentario
-        const response = await fetch('http://127.0.0.1:8000/api/opiniones/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Token ${token}`,
-            },
-            body: JSON.stringify({
-              cancha: idCancha,
-              descripcion: comentario,
-              propietario: 10, // Obtener el id del usuario logueado
-            }),
-        });
-
-        if (!response.ok) {
-            alert('Error al crear opinion');
+        if (!comentario.trim()) {
+            toast.error('No puedes enviar un comentario vacío');
             return;
         }
-        
-
-        console.log('Comentario:', comentario);
-        handleCloseModal();
-        navigate(`/canchas/${idCancha}`);
+    
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/opiniones/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                },
+                body: JSON.stringify({
+                    soccer_field_id: idCancha,
+                    description: comentario,
+                    stars: 4,
+                }),
+            });
+    
+            if (response.ok) {
+                toast.success('Comentario agregado correctamente!');
+                handleCloseModal();
+                // esperar 3 segundos y recargar la página
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                const errorData = await response.json();
+                console.error("Error create opinion data:", response.statusText);
+                toast.error(errorData[0] || 'Error al agregar comentario :c'); // Mostrar el mensaje de error devuelto por la API
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Error al agregar comentario');
+        }
     };
 
     const handleBackClick = () => {
@@ -115,21 +102,10 @@ export const CanchaDetails = () => {
     };
 
 
-    if (isLoading) {
-        return <div className="container text-center">Cargando...</div>;
-    }
-
-    if (errors) {
-        return <div className="container text-center" >Error: {errors.message}</div>;
-    }
-
-    if (!data) {
-        return <div className="container text-center">Error al cargar los datos de la cancha</div>;
-    }
-
-    if (!opiniones) {
-        return <div className="container text-center">Cargando opiniones...</div>;
-    }
+    if (isLoading) {return <div className="container text-center">Cargando...</div>;}
+    if (errors) {return <div className="container text-center" >Error: {errors.message}</div>;}
+    if (!data) {return <div className="container text-center">Error al cargar los datos de la cancha</div>;}
+    if (!opiniones) {return <div className="container text-center">Cargando opiniones...</div>;}
 
   return (
     <div className="container">
@@ -147,26 +123,42 @@ export const CanchaDetails = () => {
             <div className="col-12 col-md-8">
                 <div className="card shadow-sm">
                     <div className="card-body">
-                        <h2 className="card-title">{data.nombre}</h2>
-                        <img src= {data.imagen} className="card-img-top mb-3" alt="imagen de cancha"/>
-                        <p className="card-text"><strong>Ubicación:</strong> {data.direccion}</p>
-                        <p className="card-text"><strong>Email:</strong> {data.descripcion}</p>
-                        <p className="card-text"><strong>Descripción:</strong> {data.email}</p>
-                        <p className="card-text"><strong>Tipo:</strong> {data.tipo}</p>
-                        <p className="card-text"><strong>Días disponibles:</strong></p>
-                        <ul className="list-group list-group-flush">
-                            {/* {data.dias_disponibles.map((dia, index) => (
-                                <li key={index} className="list-group-item">{dia}</li>
-                            ))} */}
+                        <h2 className="card-title">{data.name}</h2>
+                        <img src= {data.image} className="card-img-top mb-3" alt="imagen de cancha"/>
+                        <p className="card-text"><strong>Ubicación:</strong> {data.address}</p>
+                        <p className="card-text"><strong>Descripción:</strong> {data.description}</p>
+                        <p className="card-text"><strong>Tipo:</strong></p>
+                        <ul className="list-group">
+                            <li className="">
+                                {data.tags && data.tags.split(",").map((tag, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </li>
+                        </ul>
+                        <p className="card-text mt-3"><strong>Días disponibles:</strong></p>
+                        <ul className="list-group">
+                            <li className="">
+                                {data.days_available && data.days_available.split(",").map((day, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {day}
+                                    </span>
+                                ))}
+                            </li>
                         </ul>
                         <p className="card-text mt-3"><strong>Horarios disponibles:</strong></p>
-                        <ul className="list-group list-group-flush">
-                            {/* {data.horarios_disponibles.map((horario, index) => (
-                                <li key={index} className="list-group-item">{horario}</li>
-                            ))} */}
+                        <ul className="list-group">
+                            <li className="">
+                                {data.hours_available && data.hours_available.split(",").map((hour, index) => (
+                                    <span key={index} className="badge text-bg-dark ms-1">
+                                        {hour}
+                                    </span>
+                                ))}
+                            </li>
                         </ul>
-                        <p className="card-text"><strong>Propietario:</strong> {data.propietario}</p>
-                        <p className="card-text mt-3"><strong>Precio:</strong> ${data.precio}</p>
+                        <p className="card-text mt-3"><strong>Propietario:</strong> {data.owner.first_name} {data.owner.last_name}</p>
+                        <p className="card-text mt-3"><strong>Precio:</strong> ${data.price}</p>
                         <div className="row">
                             <div className="col-12 col-md-4"></div>
                             <div className="col-12 col-md-4">
@@ -189,7 +181,7 @@ export const CanchaDetails = () => {
               {!opiniones && <p className="text-body-secondary">Cargando opiniones...</p>}
               {opiniones.length === 0 && <p className="text-body-secondary">No hay opiniones</p>}
               {opiniones.map((opinion, index) => (
-                <OpinionesCard key={index} opinion={opinion} propietario={opinion.propietario}/>
+                <OpinionesCard key={index} opinion={opinion} propietario={opinion.user}/>
               ))}
               <button className="btn btn-dark mb-5" onClick={handleShowModal}>
                 <CgMathPlus /> Agregar comentario
@@ -215,6 +207,7 @@ export const CanchaDetails = () => {
                             placeholder="Escribe tu comentario aquí..."
                             value={comentario}
                             onChange={handleComentarioChange}
+                            required
                             />
                         </div>
                         <div className="modal-footer">

@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { useNavigate } from "react-router-dom";
-import useFetch from "../hooks/useFetchHook";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import Swal from 'sweetalert2'
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -60,14 +58,34 @@ export const Register = () => {
                 password: updatedData.password || "",
                 image: updatedData.image || null,
             });
-            toast.success("Cuenta creada con éxito!");
+            Swal.fire({
+              title: "Cuenta creada con éxito!",
+              icon: "success",
+              draggable: true
+            });
             navigate("/login");
         } else {
-            toast.error("Error al crear cuenta :(.");
-            console.error("Error create user data:", response.statusText);
+          const errorData = await response.json();
+          console.error("Error create user data:", response.statusText);
+          if (errorData.errors) {
+              Object.keys(errorData.errors).forEach(field => {
+                Swal.fire({
+                  icon: "error",
+                  title: errorData.message,
+                  text: `${field}: ${errorData.errors[field].join(", ")}`,
+                });
+                console.log(`${field}: ${errorData.errors[field].join(", ")}`);
+          });
+    }
         }
     } catch (error) {
-        console.error("Error al crear cuenta:", error);
+      console.error("Error al crear cuenta:", error);
+      console.log(error.message);
+      if (error.errors) {
+          Object.keys(error.errors).forEach(field => {
+              console.log(`${field}: ${error.errors[field].join(", ")}`);
+          });
+      }
     }
   };
 
@@ -142,7 +160,7 @@ export const Register = () => {
                 Celular
               </label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 id="telephone"
                 name="telephone"

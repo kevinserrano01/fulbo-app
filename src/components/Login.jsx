@@ -1,30 +1,48 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from "react";
-import useFetch from "../hooks/useFetchHook";
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import Swal from 'sweetalert2'
 
 export const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [triggerFetch, setTriggerFetch] = useState(false);
-
-    const [{ data, isError, isLoading }, doFetch] = useFetch(
-        "http://127.0.0.1:8000/api/token/",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-        }
-    );
+    const [isLoading, setIsLoading] = useState(false);
 
     const { login } = useAuth("actions");
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        setTriggerFetch(true);
-        doFetch(); // fetch
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}login/`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+          });
+
+          if (!response.ok) {
+              throw new Error('Error al iniciar sesión');
+          }
+
+          const data = await response.json();
+          login(data.access);
+          Swal.fire({
+            title: "Bienvenido!",
+            icon: "success",
+            draggable: true
+          });
+      } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: error.message,
+            text: "Usuario o contraseña incorrectos",
+          });
+      } finally {
+          setIsLoading(false);
+      }
     }
 
     function handleChange(event) {
@@ -32,13 +50,6 @@ export const Login = () => {
         if (name === "username") setUsername(value);
         if (name === "password") setPassword(value);
     }
-
-    useEffect(() => {
-        if (data && !isError && triggerFetch) {
-            login(data.access);
-        }
-    }, [data, isError, triggerFetch]);
-
 
   return (
     <div className="container">
@@ -49,11 +60,11 @@ export const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="username" className="form-label">Usuario</label>
-              <input type="text" className="form-control" id="username" name="username" defaultValue="" onChange={handleChange} required/>
+              <input type="text" className="form-control" id="username" name="username" defaultValue="" onChange={handleChange} required autoComplete="username"/>
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Contraseña</label>
-              <input type="password" className="form-control" id="password" name="password" defaultValue="" onChange={handleChange} required/>
+              <input type="password" className="form-control" id="password" name="password" defaultValue="" onChange={handleChange} required autoComplete="current-password"/>
             </div>
             <div className="mb-3">
               <p >
@@ -63,10 +74,6 @@ export const Login = () => {
             <div className="mb-3 text-center">
               <div className="control">
                 <button type="submit" className="btn btn-primary text-center">Ingresar</button>
-                {isLoading && triggerFetch && (
-                      <p>Cargando...</p>
-                  )}
-                {isError && <p>Error al cargar los datos.</p>}
               </div>
             </div>
           </form>

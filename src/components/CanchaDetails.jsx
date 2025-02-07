@@ -105,7 +105,7 @@ export const CanchaDetails = () => {
     };
 
     const handleIniciarReserva = () => {
-        navigate(`/reservas/addReserva`);
+        navigate(`/reservas/addReserva/${idCancha}`);
     };
 
 

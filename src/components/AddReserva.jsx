@@ -1,10 +1,26 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import useFetch from "../hooks/useFetchHook";
+import { useAuth } from "../contexts/AuthContext";
+
 
 export const AddReserva = () => {
     const navigate = useNavigate();
+    const { idCancha } = useParams();
+    const { token } = useAuth('state');
     const [diaSeleccionado, setDiaSeleccionado] = useState('');
     const [horaSeleccionada, setHoraSeleccionada] = useState('');
+    const [ {data, isLoading, errors}, doFetch ] = useFetch(`${import.meta.env.VITE_BASE_URL}api/canchas/${idCancha}/`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Token ${token}`,
+        },
+    });
+
+    useEffect(() => {
+        doFetch();
+    }, []);
 
     const handleCambiarDia = (e) => {
         setDiaSeleccionado(e.target.value);
@@ -33,8 +49,19 @@ export const AddReserva = () => {
         console.log(datosReserva);
     }
 
+    if (isLoading) {
+        return <p>Cargando...</p>;
+    }
 
-  return (
+    if (errors) {
+        return <p>Error al cargar los datos: {errors}</p>;
+    }
+
+    //se extraen los dias y las horas disponibles de sus respectivas cadenas de texto para luego recorrer estos en opciones
+    const daysAvailables = data?.days_available ? data.days_available.split(',') : [];
+    const hoursAvailables = data?.hours_available ? data.hours_available.split(',') : []; 
+
+    return (
     <div className="container">
         <div className="row">
             <div className="col-md-4"></div>
@@ -42,32 +69,29 @@ export const AddReserva = () => {
                 <form onSubmit={recibirDatosReserva}>
                     <div className="mb-3">
                         <label htmlFor="nombreCancha" className="form-label">Nombre Cancha</label>
-                        <input type="text" className="form-control" id="nombreCancha" name="nombreCancha" value="Cancha Los Amigos" disabled/>
+                        <input type="text" className="form-control" id="nombreCancha" name="nombreCancha" value={data.name} readOnly/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="ubicacion" className="form-label">Ubicacion</label>
-                        <input type="text" className="form-control" id="ubicacion" name="ubicacion" value="Av. Belgrano 987, Salta" disabled />
+                        <input type="text" className="form-control" id="ubicacion" name="ubicacion" value={data.address} readOnly />
                     </div>
                     <div className="mb-3">
-                        <p>Dias disponibles</p>
-                        <select className="form-select" aria-label="Default select example" value={diaSeleccionado} onChange={handleCambiarDia}>
-                            <option value="" disabled>Selecciona un dia</option>
-                            <option value="Lunes">Lunes</option>
-                            <option value="Miercoles">Miercoles</option>
-                            <option value="Sabado">Sabado</option>
-                            <option value="Domingo">Domingo</option>
-                        </select>
-                    </div>
+                            <p>Días disponibles</p>
+                            <select className="form-select" aria-label="Default select example" value={diaSeleccionado} onChange={handleCambiarDia}>
+                                <option value="" disabled>Selecciona un día</option>
+                                {daysAvailables.map((day, index) => (
+                                    <option key={index} value={day}>{day}</option>
+                                ))}
+                            </select>
+                        </div>
                     <div className="mb-3">
-                        <p>Horarios disponibles</p>
-                        <select className="form-select" aria-label="Default select example" value={horaSeleccionada} onChange={handleCambiarHora}>
-                            <option value="" disabled>Selecciona un horario</option>
-                            <option value="20:00">20:00</option>
-                            <option value="21:00">21:00</option>
-                            <option value="22:00">22:00</option>
-                            <option value="23:00">23:00</option>
-                            <option value="00:00">00:00</option>
-                        </select>
+                            <p>Horarios disponibles</p>
+                            <select className="form-select" aria-label="Default select example" value={horaSeleccionada} onChange={handleCambiarHora}>
+                                <option value="" disabled>Selecciona un horario</option>
+                                {hoursAvailables.map((hour, index) => (
+                                    <option key={index} value={hour}>{hour}</option>
+                                ))}
+                            </select>
                     </div>
                     <button type="button" className="btn btn-danger" onClick={cancelarReserva}>Cancelar</button>
                     <button type="submit" className="btn btn-success">Reservar</button>

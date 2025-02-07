@@ -36,7 +36,7 @@ export const Router = createBrowserRouter([
                         element: <ReservaDetails />
                     },
                     {
-                        path: "addReserva",
+                        path: "addReserva/:idCancha",
                         element: <AddReserva />
                     }
                 ],

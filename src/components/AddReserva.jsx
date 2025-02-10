@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetchHook";
 import { useAuth } from "../contexts/AuthContext";
-
+import Swal from 'sweetalert2'
 
 export const AddReserva = () => {
     const navigate = useNavigate();
@@ -37,25 +38,43 @@ export const AddReserva = () => {
     }
 
     // recibir los datos del formulario de la reserva y enviarlos a la base de datos
-    const recibirDatosReserva = (e) => {
+    const recibirDatosReserva = async (e) => {
         e.preventDefault();
-        const datosReserva = {
-            nombreCancha: e.target.nombreCancha.value,
-            ubicacion: e.target.ubicacion.value,
-            dia: diaSeleccionado,
-            horario: horaSeleccionada
+        const reserva = {
+            "day": diaSeleccionado,
+            "hour": horaSeleccionada,
+            "field": idCancha,
+        };
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/reservas/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                },
+                body: JSON.stringify(reserva),
+            });
+            if (response.ok) {
+                Swal.fire({
+                    title: "Reserva exitosa",
+                    icon: "success",
+                    draggable: true
+                  });
+                navigate('/reservas');
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Ha ocurrido un error al realizar la reserva",
+                  });
+            }
+        } catch (error) {
+            console.error('Error al realizar la reserva:', error);
         }
-        alert('Cancha reservada con exito');
-        console.log(datosReserva);
     }
 
-    if (isLoading) {
-        return <p>Cargando...</p>;
-    }
-
-    if (errors) {
-        return <p>Error al cargar los datos: {errors}</p>;
-    }
+    if (isLoading) {return <p>Cargando...</p>;}
+    if (errors) {return <p>Error al cargar los datos: {errors}</p>;}
 
     //se extraen los dias y las horas disponibles de sus respectivas cadenas de texto para luego recorrer estos en opciones
     const daysAvailables = data?.days_available ? data.days_available.split(',') : [];

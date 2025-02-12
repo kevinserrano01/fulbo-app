@@ -11,6 +11,7 @@ import { ReservaDetails } from "./components/ReservaDetails";
 import { AddReserva } from "./components/AddReserva";
 import { UserProfile } from "./components/UserProfile";
 import { UserEdit } from "./components/UserEdit";
+import { ProtectedRoute } from "./security/ProtectedRouter";
 
 export const Router = createBrowserRouter([
     {
@@ -22,22 +23,38 @@ export const Router = createBrowserRouter([
             },
             {
                 path: "/",
-                element: <Home />
+                element: (
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: "/reservas",
                 children: [
                     {
                         index: true,
-                        element: <Reserva />
+                        element: (
+                            <ProtectedRoute>
+                                <Reserva />
+                            </ProtectedRoute>
+                        ),
                     },
                     {
                         path: ":idReserva",
-                        element: <ReservaDetails />
+                        element: (
+                            <ProtectedRoute>
+                                <ReservaDetails />
+                            </ProtectedRoute>
+                        ),
                     },
                     {
                         path: "addReserva/:idCancha",
-                        element: <AddReserva />
+                        element: (
+                            <ProtectedRoute>
+                                <AddReserva />
+                            </ProtectedRoute>
+                        ),
                     }
                 ],
             },
@@ -50,7 +67,11 @@ export const Router = createBrowserRouter([
                     },
                     {
                         path: ":idCancha",
-                        element: <CanchaDetails />
+                        element: (
+                            <ProtectedRoute>
+                                <CanchaDetails />
+                            </ProtectedRoute>
+                        ),
                     }
                 ],
             },
@@ -67,11 +88,19 @@ export const Router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <UserProfile />
+                        element: (
+                            <ProtectedRoute>
+                                <UserProfile />
+                            </ProtectedRoute>
+                        ),
                     },
                     {
                         path: "edit",
-                        element: <UserEdit />
+                        element: (
+                            <ProtectedRoute>
+                                <UserEdit />
+                            </ProtectedRoute>
+                        ),
                     }
                 ]
             }

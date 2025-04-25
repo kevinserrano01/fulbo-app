@@ -9,14 +9,13 @@ export const Layout = () => {
   return (
     <AuthProvider>
       <div>
-        <div className="row">
+        <div className="row gx-0">
           <div className="col-12">
             <NavBar />
           </div>
         </div>
 
-        <div className="row">
-          <div className="main-content">
+        <div className="row gx-0">
             <Outlet />
             <ToastContainer 
               position="top-right"
@@ -30,7 +29,6 @@ export const Layout = () => {
               pauseOnHover
               theme="colored"
             />
-          </div>
         </div>
       </div>
     </AuthProvider>

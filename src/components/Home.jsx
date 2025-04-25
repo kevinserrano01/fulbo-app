@@ -1,19 +1,15 @@
-
+import "../styles/Home.css"
 export const Home = () => {
   return (
-    <div className='container text-center'>
-      <div className="row">
-        <h1>Bienvenidos a Fulbo?</h1>
-        <p>Esta aplicación permite a los usuarios reservar canchas de fútbol de manera fácil y organizada en Salta Capital.</p>
+      <div className="position-relative">
+      <img src="/assets/soccer-game-concept.jpg" className="img-fluid" alt="cancha" />
+      <div className="position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}></div>
+      <h1 className="position-absolute top-0 start-0 m-3 p-display-1 text-light" 
+          style={{ zIndex: 1 , fontWeight: 'bold' }}>
+        Reserva tu cancha de fútbol de manera fácil y organizada en Salta Capital.
+      </h1>
+      <button className="position-absolute top-50 start-50 translate-middle btn btn-primary btn-lg btn-success btn-custom" type="button">Empezar</button>
       </div>
-        
-      <div className="row mt-5">
-        <div className="col-md-4"></div>
-        <div className="col-md-4">
-          <button className='btn btn-outline-light btn-lg text-center'>Empezar</button>
-        </div>
-        <div className="col-md-4"></div>
-      </div>        
-    </div>
+          
   )
 }

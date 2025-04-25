@@ -4,7 +4,8 @@ import { useAuth } from "../../contexts/AuthContext";
 export const NavBar = () => {
     const anchoImagen = 40;
     const { logout } = useAuth("actions");
-
+    const { isAuthenticated } = useAuth('state');
+    
     // funcion para cerrar sesion
     const handleLogout = () => {
       logout();
@@ -97,9 +98,15 @@ export const NavBar = () => {
               </li>
             </ul>
             <form className="d-flex" role="search">
+            {isAuthenticated ? (
               <button className="btn btn-outline-light" type="button" onClick={handleLogout}>
                 Salir
               </button>
+           ) : (
+            <button className="btn btn-outline-light" type="button" onClick={()=>window.location.href = '/login'}>
+              Login
+            </button>
+          )}
             </form>
           </div>
         </div>
